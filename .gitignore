@@ -7,3 +7,22 @@ data/output/
 # Python cache
 __pycache__/
 *.pyc
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Output files
+data/output/
+*.log
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
