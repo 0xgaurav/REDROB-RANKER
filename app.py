@@ -780,7 +780,11 @@ def rank_candidates(job_file, candidates_file, progress=gr.Progress(track_tqdm=T
         )
 
 
-with gr.Blocks(title="REDROB-RANKER") as demo:
+with gr.Blocks(
+    title="REDROB-RANKER",
+    theme=APP_THEME,
+    css=CUSTOM_CSS,
+) as demo:
     with gr.Column(elem_id="app-shell"):
         gr.HTML(
             """
@@ -915,4 +919,4 @@ with gr.Blocks(title="REDROB-RANKER") as demo:
         queue=False,
     )
 
-demo.launch(theme=APP_THEME, css=CUSTOM_CSS)
+demo.launch()
