@@ -1,0 +1,10 @@
+gradio>=5.34.2
+numpy
+pandas
+python-docx
+PyYAML
+scikit-learn
+sentence-transformers
+torch
+transformers
+tqdm

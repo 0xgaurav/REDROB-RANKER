@@ -1,9 +1,29 @@
-# RedRob-Ranker
-
-> An end-to-end AI-powered candidate ranking system that semantically matches resumes to job descriptions, evaluates profile quality, detects inconsistencies and fraud signals, generates recruiter-style reasoning, and exports the Top 100 ranked candidates.
-
+---
+title: REDROB-RANKER
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+sdk_version: "5.34.2"
+python_version: "3.11"
+app_file: app.py
+pinned: false
 ---
 
+# REDROB-RANKER
+
+AI-powered candidate ranking system built for the RedRob Hackathon.
+
+## Features
+
+- Semantic candidate-job matching
+- Feature extraction
+- Fraud detection
+- Consistency analysis
+- Multi-factor scoring
+- Deterministic reasoning generation
+- CSV submission export
+
+Upload a Job Description and a Candidates JSONL file, then download the ranked submission CSV.
 ## Overview
 
 RedRob-Ranker is a deterministic resume ranking pipeline designed to automate candidate evaluation for recruitment workflows.
