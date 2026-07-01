@@ -1,5 +1,3 @@
-import csv
-import inspect
 import shutil
 import time
 from pathlib import Path
@@ -483,80 +481,28 @@ body,
     .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-@media (max-width: 720px) {
-    .topbar { height: auto; padding: 12px 18px; align-items: flex-start; gap: 12px; }
-    .nav-actions { gap: 8px; }
-    .page { padding: 24px 14px 36px; }
-    .dashboard-card { padding: 20px !important; min-height: auto; }
-    .stats-grid { grid-template-columns: 1fr; }
+@media (max-width: 560px) {
+    .hero-card,
+    .glass-card {
+        border-radius: 20px !important;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .glass-card {
+        padding: 20px !important;
+    }
 }
 """
 
-
-def supports_kwarg(callable_obj, parameter: str) -> bool:
-    try:
-        signature = inspect.signature(callable_obj)
-    except (TypeError, ValueError):
-        return False
-
-    return parameter in signature.parameters
-
-
-def gradio_layout_kwargs() -> tuple[dict, dict]:
-    blocks_kwargs = {"title": "REDROB-RANKER"}
-    launch_kwargs = {}
-
-    for parameter, value in (("theme", APP_THEME), ("css", CUSTOM_CSS)):
-        if supports_kwarg(gr.Blocks, parameter):
-            blocks_kwargs[parameter] = value
-        elif supports_kwarg(gr.Blocks.launch, parameter):
-            launch_kwargs[parameter] = value
-
-    return blocks_kwargs, launch_kwargs
-
-
-def status_html(state: str, title: str, text: str) -> str:
-    return f"""
-    <div class="status-panel">
-      <div class="status-line">
-        <span class="status-dot {state}"></span>
-        <span class="status-title">{title}</span>
-      </div>
-      <p class="status-text">{text}</p>
-    </div>
-    """
-
-
-def progress_html(percent: int, stage: str, detail: str, state: str = "processing") -> str:
-    bounded_percent = max(0, min(100, percent))
-    return f"""
-    <div class="result-panel">
-      <div class="status-line">
-        <span class="status-dot {state}"></span>
-        <span class="status-title">{stage}</span>
-      </div>
-      <div class="progress-head">
-        <span class="stage-label">Analysis Progress</span>
-        <span class="percent-label">{bounded_percent}%</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" style="width: {bounded_percent}%"></div>
-      </div>
-      <p class="result-copy">{detail}</p>
-    </div>
-    """
-
-
-def completion_html(message: str) -> str:
-    return f"""
-    <div class="status-panel">
-      <div class="status-line">
-        <span class="status-dot success"></span>
-        <span class="status-title">Completion Message</span>
-      </div>
-      <p class="status-text">{message}</p>
-    </div>
-    """
+READY_STATUS = """
+<div class="status-panel status-ready">
+    <p><strong>🟢 Ready</strong></p>
+    <p>Upload both files, then run the ranking pipeline.</p>
+</div>
+"""
 
 
 READY_STATUS = status_html(
@@ -793,20 +739,31 @@ def rank_candidates(job_file, candidates_file, progress=gr.Progress(track_tqdm=T
         )
 
     except Exception as e:
-        yield (
-            gr.update(value=status_html("error", "Pipeline Error", str(e)), visible=True),
-            gr.update(value=progress_html(100, "Ranking Failed", "Please review the error and try again.", "error"), visible=True),
-            gr.update(value=[], visible=False),
-            gr.update(value=None, visible=False),
-            gr.update(value="", visible=False),
-            gr.update(value="", visible=False),
-        )
+        yield f"""
+        <div class="status-panel status-error">
+            <p><strong>🔴 Error</strong></p>
+            <p>{str(e)}</p>
+        </div>
+        """, """
+        <div class="results-panel">
+            <p><strong>Ranking failed</strong></p>
+            <p>Please review the status message and try again.</p>
+        </div>
+        """, None
 
 
-BLOCKS_KWARGS, LAUNCH_KWARGS = gradio_layout_kwargs()
+with gr.Blocks(
+    title="REDROB-RANKER",
+    theme=gr.themes.Soft(
+        primary_hue="cyan",
+        secondary_hue="blue",
+        neutral_hue="slate",
+        radius_size="lg",
+        font=[gr.themes.GoogleFont("Inter"), "ui-sans-serif", "system-ui", "sans-serif"],
+    ),
+    css=CUSTOM_CSS,
+) as demo:
 
-
-with gr.Blocks(**BLOCKS_KWARGS) as demo:
     with gr.Column(elem_id="app-shell"):
         gr.HTML(
             """
@@ -941,4 +898,4 @@ with gr.Blocks(**BLOCKS_KWARGS) as demo:
         queue=False,
     )
 
-demo.launch(**LAUNCH_KWARGS)
+demo.launch()
