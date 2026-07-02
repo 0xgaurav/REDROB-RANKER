@@ -26,3 +26,8 @@ env/
 
 # macOS
 .DS_Store
+# Large datasets
+data/raw/candidates.jsonl
+data/output/
+*.csv
+*.jsonl
