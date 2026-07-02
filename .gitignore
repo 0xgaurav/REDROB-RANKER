@@ -31,3 +31,29 @@ data/raw/candidates.jsonl
 data/output/
 *.csv
 *.jsonl
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Outputs
+data/output/
+*.csv
+
+# Large datasets
+data/raw/candidates.jsonl
+data/raw/sample_candidates.jsonl
+
+# HuggingFace cache
