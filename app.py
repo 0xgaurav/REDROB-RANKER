@@ -1,3 +1,4 @@
+import csv
 import shutil
 import time
 from pathlib import Path
@@ -496,6 +497,38 @@ body,
     }
 }
 """
+
+def status_html(state: str, title: str, detail: str) -> str:
+    return f"""
+    <div class="status-panel">
+      <div class="status-line">
+        <span class="status-dot {state}"></span>
+        <span class="status-title">{title}</span>
+      </div>
+      <p class="status-text">{detail}</p>
+    </div>
+    """
+
+
+def progress_html(percent: int, stage: str, detail: str, state: str) -> str:
+    percent = max(0, min(100, percent))
+    return f"""
+    <div class="result-panel {state}">
+      <div class="progress-head">
+        <span class="stage-label">{stage}</span>
+        <span class="percent-label">{percent}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width: {percent}%"></div>
+      </div>
+      <p class="result-copy">{detail}</p>
+    </div>
+    """
+
+
+def completion_html(message: str) -> str:
+    return f'<p class="result-copy">{message}</p>'
+
 
 READY_STATUS = """
 <div class="status-panel status-ready">
